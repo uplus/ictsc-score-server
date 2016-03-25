@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  data () {
+  data: () => {
     return {
       show_login: false
     }
