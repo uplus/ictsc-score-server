@@ -4,14 +4,14 @@
     .header-logo
       a(href = "") ICTSC5
     .form-message Enter your email address and password.
-    form
+    form(@submit.prevent="doLogin")
       .form-item
         label(for = "login")
-        input(type = "text", name = "login", placeholder = "Login ID", required)
+        input(type = "text", name = "login", v-model = "login", placeholder = "Login ID", required)
       .form-item
         label(for = "password")
-        input(type = "password", name = "password", placeholder = "Password", required)
-      // .form-error Email address or password is incorrect.
+        input(type = "password", name = "password", v-model = "password", placeholder = "Password", required)
+      .form-error("v-show" = "show_error") Email address or password is incorrect.
       .button-wrap
         input.button#signin(type = "submit", title = "Sign In", value = "Sign In")
     .fpass
@@ -22,8 +22,26 @@
 export default {
   data: () => {
     return {
-      show_login: false
+      show_login: false,
+      show_error: false,
+      login: null,
+      password: null
     }
+  },
+
+  ready: function() {
+    this.$http.get("/api/session").then(
+      (response) => {
+        if (response.data.status == "not_logged_in") {
+          this.show();
+        } else {
+          this.hide();
+        }
+      }, (response) => {
+        // fail
+        console.dir(response);
+      }
+    );
   },
 
   methods: {
@@ -32,6 +50,25 @@ export default {
     },
     hide() {
       this.show_login = false;
+    },
+    doLogin() {
+      this.show_error = false;
+
+      this.$http.post("/api/session", {login: this.login, password: this.password}).then(
+        (response) => {
+          console.dir(response.data);
+          if (response.data.status == "success") {
+            this.show_error = false;
+            this.hide();
+          } else {
+            this.show_error = true;
+          }
+        }, (response) => {
+          // fail
+          this.show_error = true;
+        }
+      );
+
     }
   },
 
