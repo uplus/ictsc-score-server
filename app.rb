@@ -99,6 +99,15 @@ class App < Sinatra::Base
     haml :problems
   end
 
+  get "/problems/:id" do
+    halt 404 if not Problem.exists?(id: params[:id])
+
+    @title = "PROBLEM"
+    @problem = Problem.find_by(id: params[:id])
+
+    haml :problem
+  end
+
   get "/users" do
 
   end
