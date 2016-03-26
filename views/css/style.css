@@ -281,45 +281,6 @@ thead th {
   text-align: center;
 }
 
-.table-no {
-  width: 7%;
-  text-align: center;
-}
-
-.table-title {
-  width: 60%;
-}
-
-.table-duedate {
-  width: 14%;
-  text-align: center;
-}
-
-.table-updated {
-  width: 14%;
-  text-align: center;
-}
-
-.problems-table tbody tr {
-  transition: 0.2s;
-}
-
-.problems-table tbody tr:hover {
-  background: #f7f7f7;
-}
-
-.problems-table tr + tr {
-  border-top: 1px solid #ececec;
-}
-
-.problems-table th {
-  padding: 18px 1%;
-}
-
-.problems-header {
-  margin-bottom: 6px;
-}
-
 /*
 .problems-no {
 	float: left;
