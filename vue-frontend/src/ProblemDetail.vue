@@ -63,7 +63,6 @@ export default {
                  .replace(/  /g, "&nbsp; ")
                  .replace(/  /g, " &nbsp;")
                  .replace(/\r\n|\n|\r/g, "<br>");
-    }
     },
 
     showAnswer () {
