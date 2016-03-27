@@ -36,8 +36,12 @@ export default {
     show() {
       this.show_login = true;
     },
+    showError() {
+      this.show_error = true;
+    },
     hide() {
       this.show_login = false;
+      this.show_error = false;
     },
     doLogin() {
       this.show_error = false;
@@ -48,7 +52,8 @@ export default {
   events: {
     "loginForm:show": "show",
     "loginForm:hide": "hide",
-    "member:login": "hide",
+    "member:login:success": "hide",
+    "member:login:fail": "showError",
     "member:logout": "show"
   }
 

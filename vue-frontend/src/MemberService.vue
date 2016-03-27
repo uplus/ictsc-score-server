@@ -33,9 +33,9 @@ export default {
         (response) => {
           console.dir(response.data);
           if (response.data.status == "success") {
-            this.$root.$broadcast("member:login");
+            this.$root.$broadcast("member:login:success");
           } else {
-            this.$root.$broadcast("member:logout");
+            this.$root.$broadcast("member:login:fail");
           }
         }, (response) => {
           // fail
