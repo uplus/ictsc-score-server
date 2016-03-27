@@ -2,7 +2,7 @@
 div("v-if" = "problem")
   .title-label Title
   .title
-    h1 {{ problem || problem.title }}
+    h1 {{ problem.title }}
   .info
     .info-box.info-no
       .info-title Issues No.
