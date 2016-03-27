@@ -8,5 +8,10 @@ Vue.use(require("vue-resource"));
 
 new Vue({
   el: "body",
-  components: { LoginForm, ProblemList, ProblemDetail, MemberService }
+  components: {
+    LoginForm,
+    ProblemList,
+    ProblemDetail,
+    MemberService,
+  }
 })
