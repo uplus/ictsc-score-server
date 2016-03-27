@@ -38,32 +38,18 @@ export default {
     doSend() {
       this.show_error = false;
 
-      this.$http.post("/api/issues", {
-        title: this.title,
-        closed: false,
+      this.$http.post("/api/answers", {
+        text: this.text,
+        team_id: this.$root.$refs.member_service.member.team_id,
         problem_id: this.$parent.problemId
       }).then(
-        (issue_response) => {
-          this.$http.post("/api/comments", {
-            text: this.text,
-            required_reply: true,
-            issue_id: issue_response.data.id
-          }).then(
-            (comment_response) => {
-              this.$root.$broadcast("answer:send:success");
-              this.hide();
-            }, (comment_response) => {
-              // fail
-              console.error("doSend failed");
-              console.dir(comment_response);
-              this.$root.$broadcast("answer:send:fail");
-              this.show_error = true; // NOTE: change error message
-            }
-          );
-        }, (issue_response) => {
+        (response) => {
+          this.$root.$broadcast("answer:send:success");
+          this.hide();
+        }, (response) => {
           // fail
           console.error("doSend failed");
-          console.dir(issue_response);
+          console.dir(response);
           this.$root.$broadcast("answer:send:fail");
           this.show_error = true; // NOTE: change error message
         }
