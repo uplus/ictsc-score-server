@@ -1,18 +1,19 @@
 <template lang="jade">
-.title-label Title
-.title
-  h1 {{ problem.title }}
-.info
-  .info-box.info-no
-    .info-title Issues No.
-    .info-main= "#{{ problem.id }}"
-  .info-box.info-duedate
-    .info-title Due Date
-    .info-main.info-updated {{ date2str(problem.closed_at) }}
-  .info-box
-    .info-title Updated
-    .info-main {{ date2str(problem.updated_at) }}
-.text {{{ text2html(problem.text) }}}
+div("v-if" = "problem")
+  .title-label Title
+  .title
+    h1 {{ problem || problem.title }}
+  .info
+    .info-box.info-no
+      .info-title Issues No.
+      .info-main= "#{{ problem.id }}"
+    .info-box.info-duedate
+      .info-title Due Date
+      .info-main.info-updated {{ date2str(problem.closed_at) }}
+    .info-box
+      .info-title Updated
+      .info-main {{ date2str(problem.updated_at) }}
+  .text {{{ text2html(problem.text) }}}
 </template>
 
 <script>
