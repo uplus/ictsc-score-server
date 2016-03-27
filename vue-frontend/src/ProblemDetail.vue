@@ -16,13 +16,17 @@ div("v-if" = "problem")
   .text {{{ text2html(problem.text) }}}
   .info
     .info-box
+      a("@click.prevent" = "showQuestion" href = "") New Question
+    .info-box
       a("@click.prevent" = "showAnswer" href = "") Post Answer
 answer-form
+question-form
 </template>
 
 <script>
 import dateFormat from "dateformat"
 import AnswerForm from "./AnswerForm.vue"
+import QuestionForm from "./QuestionForm.vue"
 
 export default {
   props: {
@@ -69,12 +73,17 @@ export default {
       this.$broadcast("answerForm:show");
     },
 
+    showQuestion () {
+      this.$broadcast("questionForm:show");
+    },
+
   },
 
   events: {},
 
   components: {
     AnswerForm,
+    QuestionForm
   }
 
 }
@@ -93,7 +102,6 @@ export default {
 }
 
 .info {
-  width: 840px;
   width: calc(100% - 40px);
   margin: 20px 20px 26px;
   display: flex;
