@@ -78,14 +78,17 @@
 }
 
 .header-gnav {
-  width: 700px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
+.header-gnav ul {
+  display: flex;
+}
+
 .header-gnav li {
-  width: 20%;
+  flex: 1;
   display: block;
-  float: left;
   text-align: center;
   font-size: 16px;
 }
@@ -133,7 +136,6 @@
   padding: 0 20px;
   margin: 0 auto;
   width: 900px;
-  margin: 0 auto;
 }
 
 .main-header {

@@ -80,21 +80,22 @@ export default {
 
 .info {
   width: 840px;
-  margin: 20px 0 26px 0;
-  padding: 10px;
-  display: table;
+  width: calc(100% - 40px);
+  margin: 20px 20px 26px;
+  display: flex;
   background: #f4f4f4;
   font-family: "Lato", sans-serif;
   text-align: center;
-}
 
-.info-box {
-  width: 33%;
-  display: table-cell;
-}
+  .info-box {
+    flex: 1;
+    padding: 10px;
+    border-right: 2px solid #ffffff;
 
-.info-no, .info-duedate {
-  border-right: 2px solid #ffffff;
+    &:last-child {
+      border-right: none;
+    }
+  }
 }
 
 .info-title {
