@@ -30,18 +30,6 @@ export default {
   },
 
   ready: function() {
-    this.$http.get("/api/session").then(
-      (response) => {
-        if (response.data.status == "not_logged_in") {
-          this.show();
-        } else {
-          this.hide();
-        }
-      }, (response) => {
-        // fail
-        console.dir(response);
-      }
-    );
   },
 
   methods: {
@@ -53,28 +41,15 @@ export default {
     },
     doLogin() {
       this.show_error = false;
-
-      this.$http.post("/api/session", {login: this.login, password: this.password}).then(
-        (response) => {
-          console.dir(response.data);
-          if (response.data.status == "success") {
-            this.show_error = false;
-            this.hide();
-          } else {
-            this.show_error = true;
-          }
-        }, (response) => {
-          // fail
-          this.show_error = true;
-        }
-      );
-
+      this.$root.$broadcast("member:doLogin", this.login, this.password);
     }
   },
 
   events: {
-    "showLoginView": "show",
-    "hideLoginView": "hide"
+    "loginForm:show": "show",
+    "loginForm:hide": "hide",
+    "member:login": "hide",
+    "member:logout": "show"
   }
 
 }
