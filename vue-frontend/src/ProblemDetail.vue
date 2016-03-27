@@ -14,10 +14,15 @@ div("v-if" = "problem")
       .info-title Updated
       .info-main {{ date2str(problem.updated_at) }}
   .text {{{ text2html(problem.text) }}}
+  .info
+    .info-box
+      a("@click.prevent" = "showAnswer" href = "") Post Answer
+answer-form
 </template>
 
 <script>
 import dateFormat from "dateformat"
+import AnswerForm from "./AnswerForm.vue"
 
 export default {
   props: {
@@ -59,9 +64,19 @@ export default {
                  .replace(/  /g, " &nbsp;")
                  .replace(/\r\n|\n|\r/g, "<br>");
     }
+    },
+
+    showAnswer () {
+      this.$broadcast("answerForm:show");
+    },
+
   },
 
-  events: {}
+  events: {},
+
+  components: {
+    AnswerForm,
+  }
 
 }
 </script>
