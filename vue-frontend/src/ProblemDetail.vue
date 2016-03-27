@@ -106,6 +106,15 @@ export default {
     padding: 10px;
     border-right: 2px solid #ffffff;
 
+    a {
+      font-size: 1.2em;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, .1);
+      transition: 0.4s;
+    }
+
     &:last-child {
       border-right: none;
     }
