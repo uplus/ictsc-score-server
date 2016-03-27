@@ -40,7 +40,6 @@ export default {
 
       this.$http.post("/api/answers", {
         text: this.text,
-        team_id: this.$root.$refs.member_service.member.team_id,
         problem_id: this.$parent.problemId
       }).then(
         (response) => {
