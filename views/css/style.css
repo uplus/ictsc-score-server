@@ -55,7 +55,7 @@
 }
 
 .header-wrap {
-  min-width: 940px;
+  min-width: 540px;
   border-bottom: 1px solid #ececec;
   z-index: 1;
   background: #e6003b;
@@ -64,7 +64,7 @@
 .header-content {
   padding: 0 20px;
   margin: 0 auto;
-  width: 900px;
+  width: 640px;
   color: #ffffff;
 }
 
@@ -125,7 +125,7 @@
 }
 
 .main-wrap {
-  min-width: 940px;
+  min-width: 540px;
   min-height: calc(100vh - 276px); /* 276 は適当 */
   padding-top: 20px;
   background: #f7f7f7;
@@ -135,7 +135,6 @@
 .main-content {
   padding: 0 20px;
   margin: 0 auto;
-  width: 900px;
 }
 
 .main-header {
@@ -280,7 +279,7 @@ thead th {
 }
 
 .footer-wrap {
-  min-width: 940px;
+  min-width: 540px;
   padding: 20px 0;
   background: #f7f7f7;
 
@@ -292,7 +291,7 @@ thead th {
 .footer-content {
   padding: 0 20px;
   margin: 0 auto;
-  width: 900px;
+  width: 640px;
   margin: 0 auto;
 }
 
