@@ -54,6 +54,8 @@ export default {
 
 <style lang="scss" scoped>
 .problems-table {
+  width: 100%;
+
   .table-no, .table-duedate, .table-updated {
     text-align: center;
     vertical-align: middle;
