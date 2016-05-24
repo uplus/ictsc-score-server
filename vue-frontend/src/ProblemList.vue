@@ -33,7 +33,8 @@ export default {
     this.$http.get("/api/problems").then(
       (response) => {
         this.problems = response.data;
-      }, (response) => {
+      },
+      (response) => {
         // fail
         window.location.pathname = "/";
       }
