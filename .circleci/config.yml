@@ -1,0 +1,90 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+      # specify the version you desire here
+      # - image: circleci/ruby:2.4.1-node-browsers
+      - image: upluse10/ictsc-score-server:api
+        environment:
+          - TZ=Asia/Tokyo
+          - RACK_ENV=development
+
+          - MYSQL_HOST=db
+          - MYSQL_USER=ictsc_score_server
+          - MYSQL_PASSWORD=ictsc_score_server
+          - MYSQL_DATABASE=ictsc_score_server
+          - MYSQL_ROOT_PASSWORD=ictsc_score_server
+
+          - API_SESSION_COOKIE_KEY=ictsc_score_server
+          - API_SESSION_COOKIE_SECRET=change_me
+
+          - API_CONTEST_ANSWER_REPLY_DELAY_SEC=60
+          - API_CONTEST_COMPETITION_START_AT='2004-07-07 21:00:00 +0900'
+          - API_CONTEST_SCOREBOARD_HIDE_AT='2020-07-07 21:00:00 +0900'
+          - API_CONTEST_COMPETITION_END_AT='2030-09-23 00:00:00 +0900'
+
+          - API_CONTEST_SCOREBOARD_VIEWABLE_TOP=3
+          - API_CONTEST_SCOREBOARD_VIEWABLE_TOP_SHOW_TEAM=true
+          - API_CONTEST_SCOREBOARD_VIEWABLE_TOP_SHOW_SCORE=true
+          - API_CONTEST_SCOREBOARD_VIEWABLE_UP_SHOW_TEAM=false
+          - API_CONTEST_SCOREBOARD_VIEWABLE_UP_SHOW_SCORE=true
+
+          # For realtime notification
+          - REDIS_URL=redis://redis:6379/0
+          - API_CONTEST_REDIS_REALTIME_NOTIFICATION_CHANNEL=realtime_notification
+          - PLASMA_SUBSCRIBER_REDIS_ADDR=redis:6379
+          - PLASMA_SUBSCRIBER_REDIS_CHANNELS=realtime_notification
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      # Database setup
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:schema:load
+
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+
+            bundle exec rspec --format progress \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress \
+                            $TEST_FILES
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
