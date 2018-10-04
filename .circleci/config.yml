@@ -5,20 +5,22 @@
 version: 2
 jobs:
   build:
+    # working_directory: /usr/src/app
     docker:
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
       # specify the version you desire here
       # - image: circleci/ruby:2.4.1-node-browsers
-      - image: upluse10/ictsc-score-server:api
+      - image: ictsc-score-server:api
         environment:
           - TZ=Asia/Tokyo
+          - LANG=en_US.UTF-8
+          - LANGUAGE=en_US:en
+          - LC_ALL=en_US.UTF-8
+
           - RACK_ENV=development
 
-          - MYSQL_HOST=db
+          # - MYSQL_HOST=db
+          - MYSQL_HOST=127.0.0.1
+          - DB_PORT=3306
           - MYSQL_USER=ictsc_score_server
           - MYSQL_PASSWORD=ictsc_score_server
           - MYSQL_DATABASE=ictsc_score_server
@@ -43,7 +45,25 @@ jobs:
           - API_CONTEST_REDIS_REALTIME_NOTIFICATION_CHANNEL=realtime_notification
           - PLASMA_SUBSCRIBER_REDIS_ADDR=redis:6379
           - PLASMA_SUBSCRIBER_REDIS_CHANNELS=realtime_notification
-    working_directory: ~/repo
+          # /usr/src/appを参照するのでリセット
+          - BUNDLE_GEMFILE=
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      - image: mariadb:10.3
+        environment:
+          - MYSQL_HOST=127.0.0.1
+          - DB_PORT=3306
+          - MYSQL_USER=ictsc_score_server
+          - MYSQL_PASSWORD=ictsc_score_server
+          # 自動で切り替えてほしい
+          - MYSQL_DATABASE=ictsc_score_server
+          - MYSQL_ROOT_PASSWORD=ictsc_score_server
+
+      - image: redis:2.8
+        environment:
+          - TZ=Asia/Tokyo
 
     steps:
       - checkout
@@ -51,23 +71,28 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - bundle-cache-{{ checksum "Gemfile.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - bundle-cache-
 
       - run:
           name: install dependencies
+          # イメージで既にインストールされているGemを使い回すと早い
+          # なぜか--pathを指定すると強制的に新規インストールが始まる
           command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            bundle install --jobs=4 --retry=3
+      - run:
+          # TODO: dockerizeいれないとなー
+          name: sleep
+          command: sleep 5
 
       - save_cache:
+          key: bundle-cache-{{ checksum "Gemfile.lock" }}
           paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - /usr/local/bundle
 
       # Database setup
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
+      - run: bundle exec rake db:setup
 
       # run tests!
       - run:
@@ -79,7 +104,7 @@ jobs:
             bundle exec rspec --format progress \
                             --format RspecJunitFormatter \
                             --out /tmp/test-results/rspec.xml \
-                            --format progress \
+                            --color \
                             $TEST_FILES
 
       # collect reports
