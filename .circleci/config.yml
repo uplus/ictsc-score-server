@@ -51,7 +51,8 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: mariadb:10.3
+      # High speed(e.g. 3min -> 2 min)
+      - image: circleci/mariadb:10.3-ram
         environment:
           - MYSQL_HOST=127.0.0.1
           - DB_PORT=3306
